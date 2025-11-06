@@ -58,8 +58,8 @@ export default function ProjectsListPage() {
           생성된 프로젝트 목록과 더빙 진행 상황을 조회합니다. 검색과 정렬은 현 상태를 유지하며 상세
           페이지로 이동합니다.
         </p>
-        <div className="grid gap-3 md:grid-cols-[1fr,200px] md:items-center">
-          <div className="relative">
+        <div className="flex gap-3">
+          <div className="relative flex-1">
             <Search className="text-muted pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
             <Input
               value={query}

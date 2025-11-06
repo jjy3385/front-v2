@@ -8,19 +8,18 @@ import { cva } from 'class-variance-authority'
 import { cn } from '../lib/utils'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 rounded-full border text-sm font-medium transition-colors duration-150 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60',
+  'inline-flex items-center justify-center gap-2 rounded-full border text-sm font-medium transition-colors duration-150 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 whitespace-nowrap',
   {
     variants: {
       variant: {
-        primary:
-          'bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 border-transparent',
+        primary: 'bg-primary text-primary-foreground shadow-sm hover:bg-primary border-transparent',
         secondary:
           'bg-surface-2 text-foreground border border-surface-4 hover:bg-surface-3/70 shadow-inner',
         subtle:
           'bg-transparent border-transparent text-muted hover:text-foreground hover:bg-surface-3/70',
         danger: 'bg-danger text-danger-foreground border-transparent hover:bg-danger/90 shadow-sm',
         outline:
-          'border-surface-4 bg-transparent text-foreground hover:bg-surface-3/90 hover:text-foreground',
+          'border-primary bg-transparent text-primary hover:bg-primary/10 hover:text-primary',
         ghost: 'border-transparent text-muted hover:bg-surface-3/70 hover:text-foreground',
       },
       size: {

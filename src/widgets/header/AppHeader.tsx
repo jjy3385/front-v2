@@ -32,7 +32,7 @@ export function AppHeader() {
             <span className="text-foreground text-base font-medium">{appName}</span>
           </div>
         </Link>
-        {userNavItems.length > 0 ? (
+        {/* {userNavItems.length > 0 ? (
           <nav className="hidden items-center gap-4 md:flex">
             {userNavItems.map((item) => (
               <NavLink
@@ -48,7 +48,7 @@ export function AppHeader() {
           </nav>
         ) : (
           <span className="hidden md:block" />
-        )}
+        )} */}
         {isAuthenticated ? (
           <div className="hidden items-center gap-3 md:flex">
             <Button asChild variant="secondary" size="sm">

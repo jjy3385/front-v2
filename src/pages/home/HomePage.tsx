@@ -11,7 +11,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from '../../shared/ui/Ca
 import { ToggleGroup, ToggleGroupItem } from '../../shared/ui/ToggleGroup'
 import WorkspacePage from '../workspace/WorkspacePage'
 
-type SampleLanguage = 'ko' | 'ja' | 'es'
+type SampleLanguage = 'ko' | 'ja'
 
 const samples: Record<
   SampleLanguage,
@@ -29,12 +29,12 @@ const samples: Record<
     gradient: 'from-rose-500 via-amber-500 to-violet-500',
     transcript: '현지화 팀이 선호하는 일본어 발음 규칙을 반영해 합성했습니다.',
   },
-  es: {
-    label: 'Español',
-    caption: '중남미 시장에서 바로 사용할 수 있는 라틴 스페인어 억양입니다.',
-    gradient: 'from-cyan-500 via-sky-500 to-green-500',
-    transcript: '라틴 스페인어 억양을 적용해 글로벌 진출을 돕습니다.',
-  },
+  // es: {
+  //   label: 'Español',
+  //   caption: '중남미 시장에서 바로 사용할 수 있는 라틴 스페인어 억양입니다.',
+  //   gradient: 'from-cyan-500 via-sky-500 to-green-500',
+  //   transcript: '라틴 스페인어 억양을 적용해 글로벌 진출을 돕습니다.',
+  // },
 }
 
 export default function HomePage() {
@@ -63,19 +63,12 @@ export default function HomePage() {
             <Button
               size="lg"
               onClick={() => trackEvent('sample_play', { lang: language })}
-              className="group px-6 text-white"
-              style={{ backgroundColor: '#2E8B58', borderColor: '#2E8B58' }}
+              className="group px-6"
             >
               <Play className="h-4 w-4 transition-transform group-hover:scale-110" />
               Get started
             </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="px-6"
-              style={{ borderColor: '#2E8B58', color: '#2E8B58' }}
-            >
+            <Button asChild variant="outline" size="lg" className="px-6">
               <Link to={routes.login}>Learn more</Link>
             </Button>
           </div>
