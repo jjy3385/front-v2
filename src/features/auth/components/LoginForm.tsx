@@ -6,52 +6,34 @@ import { z } from 'zod'
 
 import { routes } from '../../../shared/config/routes'
 import { trackEvent } from '../../../shared/lib/analytics'
-import { useAuthStore, type UserRole } from '../../../shared/store/useAuthStore'
 import { Button } from '../../../shared/ui/Button'
 import { Input } from '../../../shared/ui/Input'
 import { Label } from '../../../shared/ui/Label'
 import { useLoginMutation } from '../hooks/useAuthMutations'
 
-import { RoleToggle } from './RoleToggle'
-
-const roleSchema = z.enum(['distributor', 'editor'])
-
 const loginSchema = z.object({
   email: z.string().email({ message: '올바른 이메일 형식을 입력하세요.' }),
   password: z.string().min(8, { message: '비밀번호는 8자 이상이어야 합니다.' }),
-  roles: z.array(roleSchema).nonempty({ message: '최소 1개 이상의 역할을 선택하세요.' }),
 })
 
 type LoginFormValues = z.infer<typeof loginSchema>
 
 export function LoginForm() {
-  const requestedRoles = useAuthStore((state) => state.requestedRoles)
-  const setRequestedRoles = useAuthStore((state) => state.setRequestedRoles)
   const loginMutation = useLoginMutation()
 
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
-    watch,
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
       password: '',
-      roles: requestedRoles,
     },
   })
 
-  const roles = watch('roles')
-
-  const handleRoleChange = (value: UserRole[]) => {
-    setValue('roles', value, { shouldDirty: true, shouldValidate: true })
-  }
-
   const onSubmit = handleSubmit((data) => {
-    setRequestedRoles(data.roles as UserRole[])
     loginMutation.mutate(data)
   })
 
@@ -72,11 +54,6 @@ export function LoginForm() {
         <Input id="password" type="password" placeholder="8자 이상" {...register('password')} />
         {errors.password ? <p className="text-danger text-sm">{errors.password.message}</p> : null}
       </div>
-      <div className="space-y-2">
-        <Label>역할 토글</Label>
-        <RoleToggle value={roles} onChange={handleRoleChange} />
-        {errors.roles ? <p className="text-danger text-sm">{errors.roles.message}</p> : null}
-      </div>
       <div className="grid gap-3">
         <Button type="submit" disabled={loginMutation.isPending} className="w-full">
           {loginMutation.isPending ? (
@@ -96,7 +73,7 @@ export function LoginForm() {
           variant="secondary"
           className="w-full"
           onClick={() => {
-            trackEvent('login_google_click', { roles })
+            trackEvent('login_google_click')
           }}
         >
           <Mail className="h-4 w-4" />

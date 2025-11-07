@@ -18,6 +18,7 @@ const WorkspacePage = lazy(() => import('../pages/workspace/WorkspacePage'))
 const ProjectsListPage = lazy(() => import('../pages/projects/ProjectsListPage'))
 const ProjectDetailPage = lazy(() => import('../pages/projects/ProjectDetailPage'))
 const EditorPage = lazy(() => import('../pages/editor/EditorPage'))
+const ExampleCrudPage = lazy(() => import('../pages/example/ExampleCrudPage'))
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'))
 
 const router = createBrowserRouter(
@@ -34,6 +35,7 @@ const router = createBrowserRouter(
         <Route path=":id" element={<ProjectDetailPage />} />
       </Route>
       <Route path="editor/:id" element={<EditorPage />} />
+      <Route path="example" element={<ExampleCrudPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>,
   ),

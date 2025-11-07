@@ -1,20 +1,20 @@
 import { Menu } from 'lucide-react'
 import { Link, NavLink } from 'react-router-dom'
 
-import { env } from '../../shared/config/env'
-import { routes } from '../../shared/config/routes'
-import { useAuthStore } from '../../shared/store/useAuthStore'
-import { Button } from '../../shared/ui/Button'
+import { env } from '@/shared/config/env'
+import { routes } from '@/shared/config/routes'
+import { useAuthStore } from '@/shared/store/useAuthStore'
+import { Button } from '@/shared/ui/Button'
 
 export function AppHeader() {
   const appName = env.appName
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const userNavItems = isAuthenticated
     ? [
-        { to: `${routes.home}?section=projects`, label: '프로젝트' },
-        { to: `${routes.home}?section=voice-samples`, label: '보이스 샘플' },
-        { to: `${routes.home}?section=guide`, label: '이용 가이드' },
-        { to: `${routes.home}?section=support`, label: '문의' },
+        { to: `${routes.home}projects`, label: '프로젝트' },
+        { to: `${routes.home}voice-samples`, label: '보이스 샘플' },
+        { to: `${routes.home}guide`, label: '이용 가이드' },
+        { to: `${routes.home}support`, label: '문의' },
       ]
     : []
 
@@ -52,7 +52,7 @@ export function AppHeader() {
         {isAuthenticated ? (
           <div className="hidden items-center gap-3 md:flex">
             <Button asChild variant="secondary" size="sm">
-              <Link to={`${routes.home}?section=support`}>문의하기</Link>
+              <Link to={`${routes.home}support`}>문의하기</Link>
             </Button>
           </div>
         ) : (

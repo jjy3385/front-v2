@@ -22,7 +22,7 @@ export type EditorState = {
 export function useEditorState(projectId: string) {
   return useQuery({
     queryKey: queryKeys.editor.state(projectId),
-    queryFn: () => apiGet<EditorState>(`editor/${projectId}`),
+    queryFn: () => apiGet<EditorState>(`api/editor/${projectId}`),
     enabled: Boolean(projectId),
   })
 }

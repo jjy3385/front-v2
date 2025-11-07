@@ -28,7 +28,7 @@ export function AppProviders({ children }: PropsWithChildren) {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      {/* <ReactQueryDevtools initialIsOpen={false} position="left" /> */}
+      <ReactQueryDevtools initialIsOpen={false} position="left" />
       <AppToaster appName={env.appName} />
     </QueryClientProvider>
   )

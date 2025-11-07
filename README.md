@@ -112,7 +112,7 @@ flowchart LR
   - `AppProviders`에서 `staleTime`, `refetchOnWindowFocus` 기본 옵션 설정
   - `useProjects`, `useProject`, `useEditorState`로 쿼리/프리패치 예시 제공
 - **Zustand**
-  - `useAuthStore`: 로그인 여부, 역할 토글(`requestedRoles`)
+- `useAuthStore`: 로그인 여부와 사용자 정보 관리
   - `useUiStore`: 토스트, 프로젝트 생성 모달 단계(`upload → settings-a → settings-b`)
   - `useEditorStore`: 활성 세그먼트, 재생 속도, 분할 모드, 선택 트랙
 
@@ -129,7 +129,7 @@ flowchart LR
 
 - **홈(V-HOME-01)**: Hero + 예제 영상 카드 + 언어 토글 + CTA (로그인/회원가입)
 - **로그인(V-AUTH-Entry-01)**: `RoleToggle`(배급사/편집자), `react-hook-form` + `zod`, Google SSO 버튼
-- **회원가입(V-AUTH-Signup-01)**: 사용자이름 필수, 약관 체크, 역할 토글 저장
+- **회원가입(V-AUTH-Signup-01)**: 사용자이름 필수, 약관 동의 체크 (역할 선택은 추후 확장)
 - **워크스페이스(V-DIST-Workspace-01)**: 사이드바 + 업로드 카드 + 프로젝트 리스트, 모달 라우팅(`?create=upload|settings|assign`)
 - **프로젝트 생성 모달(D-5~7)**: 3단계 모두 `zod` 유효성, Next 비활성 처리, 완료 시 토스트
 - **프로젝트 목록(V-PROJ-List-01)**: 검색/정렬/탭(할당됨|완료) + 진행률 바

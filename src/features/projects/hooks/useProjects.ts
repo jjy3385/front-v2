@@ -11,7 +11,7 @@ type ProjectsResponse = {
 export function useProjects() {
   return useQuery({
     queryKey: queryKeys.projects.all,
-    queryFn: () => apiGet<ProjectsResponse>('projects'),
+    queryFn: () => apiGet<ProjectsResponse>('api/projects'),
     select: (data) => data.items,
     placeholderData: (previous) => previous,
   })
@@ -20,7 +20,7 @@ export function useProjects() {
 export function useProject(projectId: string) {
   return useQuery({
     queryKey: queryKeys.projects.detail(projectId),
-    queryFn: () => apiGet<ProjectDetail>(`projects/${projectId}`),
+    queryFn: () => apiGet<ProjectDetail>(`api/projects/${projectId}`),
     enabled: Boolean(projectId),
   })
 }

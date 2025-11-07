@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, UserPlus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -5,14 +7,11 @@ import { Link } from 'react-router-dom'
 import { z } from 'zod'
 
 import { routes } from '../../../shared/config/routes'
-import { useAuthStore, type UserRole } from '../../../shared/store/useAuthStore'
 import { Button } from '../../../shared/ui/Button'
 import { Checkbox } from '../../../shared/ui/Checkbox'
 import { Input } from '../../../shared/ui/Input'
 import { Label } from '../../../shared/ui/Label'
 import { useSignupMutation } from '../hooks/useAuthMutations'
-
-import { RoleToggle } from './RoleToggle'
 
 const signupSchema = z
   .object({
@@ -20,8 +19,7 @@ const signupSchema = z
     password: z.string().min(8, { message: '비밀번호는 8자 이상이어야 합니다.' }),
     confirmPassword: z.string(),
     userName: z.string().min(2).max(32, { message: '사용자이름은 2~32자 범위로 입력하세요.' }),
-    roles: z.array(z.enum(['distributor', 'editor'])).nonempty(),
-    agreeTerms: z.literal(true, { errorMap: () => ({ message: '약관 동의가 필요합니다.' }) }),
+    agreeTerms: z.boolean().refine((value) => value, { message: '약관 동의가 필요합니다.' }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ['confirmPassword'],
@@ -31,8 +29,6 @@ const signupSchema = z
 type SignupFormValues = z.infer<typeof signupSchema>
 
 export function SignupForm() {
-  const requestedRoles = useAuthStore((state) => state.requestedRoles)
-  const setRequestedRoles = useAuthStore((state) => state.setRequestedRoles)
   const signupMutation = useSignupMutation()
 
   const {
@@ -48,22 +44,17 @@ export function SignupForm() {
       password: '',
       confirmPassword: '',
       userName: '',
-      roles: requestedRoles,
       agreeTerms: false,
     },
   })
 
-  const roles = watch('roles')
+  useEffect(() => {
+    register('agreeTerms')
+  }, [register])
 
-  const handleRoleChange = (value: UserRole[]) => {
-    setValue('roles', value as SignupFormValues['roles'], {
-      shouldDirty: true,
-      shouldValidate: true,
-    })
-  }
+  const agreeTerms = watch('agreeTerms')
 
   const onSubmit = handleSubmit((data) => {
-    setRequestedRoles(data.roles as UserRole[])
     signupMutation.mutate(data)
   })
 
@@ -100,17 +91,15 @@ export function SignupForm() {
           ) : null}
         </div>
       </div>
-      <div className="space-y-3">
-        <Label>역할 선택</Label>
-        <RoleToggle value={roles} onChange={handleRoleChange} />
-        {errors.roles ? <p className="text-danger text-sm">{errors.roles.message}</p> : null}
-      </div>
       <div className="border-surface-4 bg-surface-2 flex items-start gap-3 rounded-2xl border p-4">
         <Checkbox
           id="agreeTerms"
-          checked={watch('agreeTerms')}
+          checked={agreeTerms}
           onCheckedChange={(checked) =>
-            setValue('agreeTerms', Boolean(checked), { shouldDirty: true, shouldValidate: true })
+            setValue('agreeTerms', checked === true, {
+              shouldDirty: true,
+              shouldValidate: true,
+            })
           }
         />
         <Label htmlFor="agreeTerms" className="text-muted text-sm leading-relaxed">

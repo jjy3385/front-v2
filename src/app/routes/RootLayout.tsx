@@ -1,7 +1,7 @@
 import { Outlet, ScrollRestoration } from 'react-router-dom'
 
-import { AppFooter } from '../../widgets/footer/AppFooter'
-import { AppHeader } from '../../widgets/header/AppHeader'
+import { AppFooter } from '../../features/layout/components/footer/AppFooter'
+import { AppHeader } from '../../features/layout/components/header/AppHeader'
 
 export function RootLayout() {
   return (

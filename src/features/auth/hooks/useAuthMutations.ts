@@ -7,7 +7,7 @@ import { useUiStore } from '../../../shared/store/useUiStore'
 type Credentials = {
   email: string
   password: string
-  roles: string[]
+  roles?: string[]
 }
 
 type SignupPayload = Credentials & {
@@ -29,10 +29,11 @@ export function useLoginMutation() {
       if (!email || !password) {
         throw new Error('Missing credentials')
       }
-      trackEvent('login_attempt', { roles })
+      const effectiveRoles = roles?.length ? roles : ['distributor']
+      trackEvent('login_attempt', { roles: effectiveRoles })
       return delay({
         userName: email.split('@')[0],
-        roles,
+        roles: effectiveRoles,
       })
     },
     onSuccess: ({ userName, roles }) => {
@@ -57,11 +58,12 @@ export function useSignupMutation() {
       if (!agreeTerms) {
         throw new Error('약관 동의가 필요합니다.')
       }
-      trackEvent('signup_submit', { roles })
+      const effectiveRoles = roles?.length ? roles : ['distributor']
+      trackEvent('signup_submit', { roles: effectiveRoles })
       return delay({
         email,
         userName,
-        roles,
+        roles: effectiveRoles,
       })
     },
     onSuccess: ({ userName, roles }) => {

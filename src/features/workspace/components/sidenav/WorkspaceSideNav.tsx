@@ -1,8 +1,8 @@
 import { BookOpenCheck, FolderKanban, LifeBuoy, MessagesSquare, Waves } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 
-import { routes } from '../../shared/config/routes'
-import { cn } from '../../shared/lib/utils'
+import { routes } from '@/shared/config/routes'
+import { cn } from '@/shared/lib/utils'
 
 const navItems = [
   {
@@ -43,10 +43,7 @@ export function WorkspaceSideNav() {
       {navItems.map((item) => {
         const Icon = item.icon
         const isActive = activeSection === item.id
-        const to =
-          item.id === 'projects'
-            ? `${basePath}?section=${item.id}`
-            : `${basePath}?section=${item.id}`
+        const to = item.id === 'projects' ? `${basePath}/${item.id}` : `${basePath}/${item.id}`
         return (
           <Link
             key={item.label}

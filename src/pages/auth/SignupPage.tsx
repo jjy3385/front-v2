@@ -6,9 +6,6 @@ export default function SignupPage() {
     <div className="flex flex-col items-center gap-8 px-6 py-16">
       <div className="max-w-md text-center">
         <h1 className="text-foreground text-3xl font-semibold">회원가입</h1>
-        <p className="text-muted mt-3 text-sm">
-          사용자이름과 역할 토글을 저장하여 첫 로그인 시 권한과 랜딩 화면을 제어합니다.
-        </p>
       </div>
       <Card className="border-surface-4 bg-surface-1 w-full max-w-2xl border p-8 shadow-soft">
         <CardHeader>

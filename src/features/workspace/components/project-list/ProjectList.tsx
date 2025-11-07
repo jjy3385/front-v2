@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
 
-import type { ProjectSummary } from '../../entities/project/types'
-import { routes } from '../../shared/config/routes'
-import { formatPercent } from '../../shared/lib/utils'
-import { Badge } from '../../shared/ui/Badge'
-import { Progress } from '../../shared/ui/Progress'
+import type { ProjectSummary } from '@/entities/project/types'
+import { routes } from '@/shared/config/routes'
+import { formatPercent } from '@/shared/lib/utils'
+import { Badge } from '@/shared/ui/Badge'
+import { Progress } from '@/shared/ui/Progress'
 
 type ProjectListProps = {
   projects: ProjectSummary[]

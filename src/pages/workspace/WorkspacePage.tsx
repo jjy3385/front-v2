@@ -2,16 +2,16 @@ import { useEffect, useMemo } from 'react'
 
 import { useSearchParams } from 'react-router-dom'
 
-import { sampleGlossaries } from '../../entities/glossary/types'
-import { sampleVoices } from '../../entities/voice-sample/types'
-import { useProjects } from '../../features/projects/hooks/useProjects'
-import { ProjectCreationModal } from '../../features/projects/modals/ProjectCreationModal'
-import { useUiStore } from '../../shared/store/useUiStore'
-import { Card, CardDescription, CardHeader, CardTitle } from '../../shared/ui/Card'
-import { Spinner } from '../../shared/ui/Spinner'
-import { ProjectList } from '../../widgets/project-list/ProjectList'
-import { WorkspaceSideNav } from '../../widgets/sidenav/WorkspaceSideNav'
-import { UploadCard } from '../../widgets/upload-card/UploadCard'
+import { sampleGlossaries } from '@/entities/glossary/types'
+import { sampleVoices } from '@/entities/voice-sample/types'
+import { useProjects } from '@/features/projects/hooks/useProjects'
+import { ProjectCreationModal } from '@/features/projects/modals/ProjectCreationModal'
+import { ProjectList } from '@/features/workspace/components/project-list/ProjectList'
+import { WorkspaceSideNav } from '@/features/workspace/components/sidenav/WorkspaceSideNav'
+import { UploadCard } from '@/features/workspace/components/upload-card/UploadCard'
+import { useUiStore } from '@/shared/store/useUiStore'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/shared/ui/Card'
+import { Spinner } from '@/shared/ui/Spinner'
 
 const stepMap = {
   upload: 'upload',

@@ -1,9 +1,29 @@
 import { HttpResponse, http } from 'msw'
 
+import type { ExampleItem, ExampleItemPayload } from '../../../entities/example/types'
 import { sampleGlossaries } from '../../../entities/glossary/types'
 import { sampleProjects } from '../../../entities/project/types'
 import { sampleSegments } from '../../../entities/segment/types'
 import { sampleVoices } from '../../../entities/voice-sample/types'
+
+let exampleItems: ExampleItem[] = [
+  {
+    id: 'example-1',
+    name: '샘플 온보딩 플로우',
+    owner: 'Evelyn',
+    status: 'in-progress',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'example-2',
+    name: '더빙 가이드 문서화',
+    owner: 'Marcus',
+    status: 'draft',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+]
 
 export const handlers = [
   http.get('/api/projects', () => {
@@ -48,5 +68,46 @@ export const handlers = [
         playbackRate: 1,
       },
     })
+  }),
+
+  http.get('/api/example-items', () => {
+    return HttpResponse.json({ items: exampleItems })
+  }),
+
+  http.post('/api/example-items', async ({ request }) => {
+    const payload = (await request.json()) as ExampleItemPayload
+    const now = new Date().toISOString()
+    const created: ExampleItem = {
+      id: `example-${Date.now()}`,
+      name: payload.name,
+      owner: payload.owner,
+      status: payload.status,
+      createdAt: now,
+      updatedAt: now,
+    }
+    exampleItems = [created, ...exampleItems]
+    return HttpResponse.json({ item: created }, { status: 201 })
+  }),
+
+  http.patch('/api/example-items/:id', async ({ params, request }) => {
+    const id = params.id as string
+    const payload = (await request.json()) as ExampleItemPayload
+    const index = exampleItems.findIndex((item) => item.id === id)
+    if (index === -1) {
+      return HttpResponse.json({ message: 'Not found' }, { status: 404 })
+    }
+    const updated: ExampleItem = {
+      ...exampleItems[index],
+      ...payload,
+      updatedAt: new Date().toISOString(),
+    }
+    exampleItems[index] = updated
+    return HttpResponse.json({ item: updated })
+  }),
+
+  http.delete('/api/example-items/:id', ({ params }) => {
+    const id = params.id as string
+    exampleItems = exampleItems.filter((item) => item.id !== id)
+    return HttpResponse.json({ success: true })
   }),
 ]

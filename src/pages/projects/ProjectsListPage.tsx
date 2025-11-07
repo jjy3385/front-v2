@@ -1,13 +1,13 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 import { Search, SlidersHorizontal } from 'lucide-react'
 
 import { useProjects } from '../../features/projects/hooks/useProjects'
+import { ProjectList } from '../../features/workspace/components/project-list/ProjectList'
 import { Button } from '../../shared/ui/Button'
 import { Input } from '../../shared/ui/Input'
 import { Spinner } from '../../shared/ui/Spinner'
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from '../../shared/ui/Tabs'
-import { ProjectList } from '../../widgets/project-list/ProjectList'
 
 const tabs = [
   { value: 'assigned', label: '할당됨' },
@@ -19,36 +19,6 @@ export default function ProjectsListPage() {
   const [query, setQuery] = useState('')
   const [sortKey, setSortKey] = useState<'recent' | 'dueDate' | 'progress'>('recent')
   const [activeTab, setActiveTab] = useState('assigned')
-
-  const filteredProjects = useMemo(() => {
-    const normalized = query.trim().toLowerCase()
-    const list = projects.filter((project) =>
-      normalized.length === 0
-        ? true
-        : [project.title, project.sourceLanguage, ...project.targetLanguages]
-            .join(' ')
-            .toLowerCase()
-            .includes(normalized),
-    )
-
-    const sorted = list.slice().sort((a, b) => {
-      if (sortKey === 'progress') {
-        return b.progress - a.progress
-      }
-      if (sortKey === 'dueDate') {
-        return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
-      }
-      const createdAtA = a.createdAt ? new Date(a.createdAt).getTime() : 0
-      const createdAtB = b.createdAt ? new Date(b.createdAt).getTime() : 0
-      return createdAtB - createdAtA
-    })
-
-    if (activeTab === 'done') {
-      return sorted.filter((project) => project.status === 'done')
-    }
-
-    return sorted.filter((project) => project.status !== 'done')
-  }, [projects, query, sortKey, activeTab])
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-12">
@@ -113,7 +83,7 @@ export default function ProjectsListPage() {
               <span className="text-muted ml-3 text-sm">목록을 불러오는 중…</span>
             </div>
           ) : (
-            <ProjectList projects={filteredProjects} />
+            <ProjectList projects={projects} />
           )}
         </TabsContent>
       </TabsRoot>

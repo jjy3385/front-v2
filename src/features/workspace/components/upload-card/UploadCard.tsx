@@ -1,9 +1,9 @@
 import { UploadCloud } from 'lucide-react'
 
-import { trackEvent } from '../../shared/lib/analytics'
-import { useUiStore } from '../../shared/store/useUiStore'
-import { Button } from '../../shared/ui/Button'
-import { Card, CardDescription, CardHeader, CardTitle } from '../../shared/ui/Card'
+import { trackEvent } from '@/shared/lib/analytics'
+import { useUiStore } from '@/shared/store/useUiStore'
+import { Button } from '@/shared/ui/Button'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/shared/ui/Card'
 
 export function UploadCard() {
   const openProjectCreation = useUiStore((state) => state.openProjectCreation)
