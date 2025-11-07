@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import { Search } from 'lucide-react'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { useProjects } from '@/features/projects/hooks/useProjects'
 import { ProjectCreationModal } from '@/features/projects/modals/ProjectCreationModal'
 import { ProjectList } from '@/features/workspace/components/project-list/ProjectList'
 import { UploadCard } from '@/features/workspace/components/upload-card/UploadCard'
+import { useAuthStore } from '@/shared/store/useAuthStore'
 import { useUiStore } from '@/shared/store/useUiStore'
 import { Input } from '@/shared/ui/Input'
 import { Spinner } from '@/shared/ui/Spinner'
@@ -22,6 +23,8 @@ export default function WorkspacePage() {
   const { data: projects = [], isLoading } = useProjects()
   const [searchTerm, setSearchTerm] = useState('')
   const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const isModalOpen = useUiStore((state) => state.projectCreation.open)
   const modalStep = useUiStore((state) => state.projectCreation.step)
   const openProjectCreation = useUiStore((state) => state.openProjectCreation)
@@ -65,6 +68,16 @@ export default function WorkspacePage() {
       return haystack.toLowerCase().includes(term)
     })
   }, [projects, searchTerm])
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login', { replace: true })
+    }
+  }, [isAuthenticated, navigate])
+
+  if (!isAuthenticated) {
+    return null
+  }
 
   return (
     <div className="mx-auto grid w-full gap-10 px-12 py-12">

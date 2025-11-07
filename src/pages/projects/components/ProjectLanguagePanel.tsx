@@ -1,0 +1,137 @@
+import { Download, Play } from 'lucide-react'
+
+import type { ProjectAsset, ProjectDetail } from '@/entities/project/types'
+import { trackEvent } from '@/shared/lib/analytics'
+import { cn } from '@/shared/lib/utils'
+import { Button } from '@/shared/ui/Button'
+import { TabsContent, TabsList, TabsRoot, TabsTrigger } from '@/shared/ui/Tabs'
+
+type ProjectLanguagePanelProps = {
+  project: ProjectDetail
+  activeLanguage: string
+  onLanguageChange: (language: string) => void
+  version: 'original' | 'translated'
+  onVersionChange: (version: 'original' | 'translated') => void
+  assetsByLanguage: Record<string, ProjectAsset[]>
+}
+
+export function ProjectLanguagePanel({
+  project,
+  activeLanguage,
+  onLanguageChange,
+  version,
+  onVersionChange,
+  assetsByLanguage,
+}: ProjectLanguagePanelProps) {
+  return (
+    <div className="border-surface-3 bg-surface-1 space-y-6 rounded-3xl border p-6 shadow-soft">
+      <TabsRoot value={activeLanguage} onValueChange={onLanguageChange}>
+        <TabsList className="flex flex-wrap gap-2">
+          {project.targetLanguages.map((lang) => (
+            <TabsTrigger key={lang} value={lang}>
+              {lang}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        {project.targetLanguages.map((lang) => (
+          <TabsContent key={lang} value={lang}>
+            <LanguagePreview
+              language={lang}
+              assets={assetsByLanguage[lang] ?? []}
+              version={version}
+              onVersionChange={onVersionChange}
+            />
+          </TabsContent>
+        ))}
+      </TabsRoot>
+    </div>
+  )
+}
+
+type LanguagePreviewProps = {
+  language: string
+  assets: ProjectAsset[]
+  version: 'original' | 'translated'
+  onVersionChange: (version: 'original' | 'translated') => void
+}
+
+function LanguagePreview({ language, assets, version, onVersionChange }: LanguagePreviewProps) {
+  const selectedAsset = assets.find((asset) => asset.type === 'video')
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Button
+            variant={version === 'original' ? 'secondary' : 'ghost'}
+            size="sm"
+            onClick={() => onVersionChange('original')}
+          >
+            원본
+          </Button>
+          <Button
+            variant={version === 'translated' ? 'secondary' : 'ghost'}
+            size="sm"
+            onClick={() => onVersionChange('translated')}
+          >
+            번역
+          </Button>
+        </div>
+      </div>
+      <div className="border-surface-3 bg-surface-1 relative overflow-hidden rounded-3xl border">
+        <div className="bg-surface-2 text-muted flex h-64 flex-col items-center justify-center gap-3">
+          <Play className="h-8 w-8" />
+          <p className="text-sm">더빙 영상 미리보기 (모의)</p>
+        </div>
+        {selectedAsset ? (
+          <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-black/60 px-3 py-1 text-xs text-white">
+            <span>{selectedAsset.codec}</span>
+            <span>{selectedAsset.resolution}</span>
+            <span>{selectedAsset.duration}s</span>
+          </div>
+        ) : null}
+      </div>
+      <div className="space-y-2">
+        <p className="text-foreground mb-3 text-sm font-semibold">결과물</p>
+        <div className="space-y-2">
+          {assets.map((asset) => (
+            <div
+              key={asset.id}
+              className={cn(
+                'border-surface-4 bg-surface-1 text-muted flex items-center justify-between rounded-2xl border px-4 py-3 text-sm',
+              )}
+            >
+              <div>
+                <p className="text-foreground font-medium">
+                  {asset.type === 'video' ? '더빙 영상' : '자막'} • {language}
+                </p>
+                <p className="text-muted text-xs">
+                  {asset.codec} • {asset.resolution} • {asset.sizeMb}MB
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  trackEvent('asset_download', {
+                    lang: language,
+                    type: asset.type,
+                    assetId: asset.id,
+                  })
+                }
+              >
+                <Download className="h-4 w-4" />
+                다운로드
+              </Button>
+            </div>
+          ))}
+        </div>
+        {assets.length === 0 ? (
+          <div className="border-surface-4 bg-surface-2 text-muted rounded-2xl border border-dashed px-4 py-6 text-center text-sm">
+            아직 산출물이 없습니다. 파이프라인 진행을 기다려주세요.
+          </div>
+        ) : null}
+      </div>
+    </div>
+  )
+}

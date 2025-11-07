@@ -22,7 +22,7 @@ export function ValidationMessage({ message, className }: ValidationMessageProps
         className,
       )}
     >
-      <span className="bg-danger inline-flex h-1.5 w-1.5 rounded-full" aria-hidden="true" />
+      <span className="bg-danger h-1.5 w-1.5 rounded-full" aria-hidden="true" />
       {message ?? ' '}
     </p>
   )

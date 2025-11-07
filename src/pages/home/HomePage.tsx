@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Play } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { routes } from '../../shared/config/routes'
 import { trackEvent } from '../../shared/lib/analytics'
@@ -40,6 +40,13 @@ const samples: Record<
 export default function HomePage() {
   const [language, setLanguage] = useState<SampleLanguage>('ko')
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(routes.workspace, { replace: true })
+    }
+  }, [isAuthenticated, navigate])
 
   if (isAuthenticated) {
     return <WorkspacePage />

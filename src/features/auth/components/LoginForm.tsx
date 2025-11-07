@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, LogIn, Mail } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
 import { routes } from '../../../shared/config/routes'
@@ -21,6 +21,7 @@ type LoginFormValues = z.infer<typeof loginSchema>
 
 export function LoginForm() {
   const loginMutation = useLoginMutation()
+  const navigate = useNavigate()
 
   const {
     register,
@@ -35,7 +36,11 @@ export function LoginForm() {
   })
 
   const onSubmit = handleSubmit((data) => {
-    loginMutation.mutate(data)
+    loginMutation.mutate(data, {
+      onSuccess: () => {
+        navigate(routes.workspace)
+      },
+    })
   })
 
   return (
@@ -47,13 +52,17 @@ export function LoginForm() {
     >
       <div className="space-y-2">
         <Label htmlFor="email">이메일</Label>
-        <Input id="email" type="email" placeholder="name@example.com" {...register('email')} />
-        <ValidationMessage message={errors.email?.message} />
+        <div>
+          <Input id="email" type="email" placeholder="name@example.com" {...register('email')} />
+          <ValidationMessage message={errors.email?.message} />
+        </div>
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">비밀번호</Label>
-        <Input id="password" type="password" placeholder="8자 이상" {...register('password')} />
-        <ValidationMessage message={errors.password?.message} />
+        <div>
+          <Input id="password" type="password" placeholder="8자 이상" {...register('password')} />
+          <ValidationMessage message={errors.password?.message} />
+        </div>
       </div>
       <div className="grid gap-3">
         <Button type="submit" disabled={loginMutation.isPending} className="w-full">
