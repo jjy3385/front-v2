@@ -23,13 +23,61 @@ export interface ProjectAsset {
   sizeMb: number
 }
 
+export interface ProjectPayload {
+  title: string
+  sourceType: 'file' | 'youtube'
+  detectAutomatically: boolean
+  sourceLanguage?: string | null
+  targetLanguages: string[]
+  speakerCount: number
+  youtubeUrl?: string
+  fileName?: string
+  fileSize?: number
+  owner_code: string
+}
+
 export interface ProjectDetail extends ProjectSummary {
   description?: string
   createdAt: string
-  glossaryName?: string
+  // glossaryName?: string
   speakerCount: number
   assets: ProjectAsset[]
-  notes?: string
+  // notes?: string
+}
+
+export interface ProjectResponse extends ProjectDetail {
+  // pass?: undefined
+  project_id: string
+}
+
+export type ProjectsResponse = {
+  items: ProjectSummary[]
+}
+
+export interface PrepareUploadPayload {
+  projectId: string
+  fileName: string
+  contentType: string
+  owner_code: string
+  // fileSize?: number
+  // fileType?: string
+}
+
+export interface PrepareUploadResponse {
+  projectId: string
+  uploadUrl: string
+  objectKey: string
+  fields?: Record<string, string>
+}
+
+export interface RegisterYoutubeSourcePayload {
+  projectId: string
+  youtubeUrl: string
+}
+
+export interface RegisterYoutubeSourceResponse {
+  projectId: string
+  status: ProjectStatus
 }
 
 export const sampleProjects: ProjectDetail[] = [
@@ -45,7 +93,6 @@ export const sampleProjects: ProjectDetail[] = [
     description:
       'Marketing trailer localisation for the upcoming AI voice-over suite. Includes three regional variants and a shared glossary.',
     createdAt: '2025-01-15T10:00:00Z',
-    glossaryName: 'AI Suite Glossary',
     speakerCount: 3,
     assets: [
       {
@@ -79,7 +126,6 @@ export const sampleProjects: ProjectDetail[] = [
         sizeMb: 212,
       },
     ],
-    notes: 'Awaiting Korean voice alignment feedback from QA.',
   },
   {
     id: 'proj-1002',
@@ -91,7 +137,6 @@ export const sampleProjects: ProjectDetail[] = [
     dueDate: '2025-02-28',
     assignedEditor: 'translator-luis',
     createdAt: '2025-01-20T09:00:00Z',
-    glossaryName: 'Education Terms',
     speakerCount: 2,
     assets: [
       {

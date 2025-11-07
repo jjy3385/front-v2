@@ -1,18 +1,17 @@
 import { useMemo, useState } from 'react'
 
-import { Link2, UploadCloud } from 'lucide-react'
+import { Link2 } from 'lucide-react'
 
 import { trackEvent } from '@/shared/lib/analytics'
 import { Button } from '@/shared/ui/Button'
 import { DialogDescription, DialogTitle } from '@/shared/ui/Dialog'
 import { Input } from '@/shared/ui/Input'
-import { Label } from '@/shared/ui/Label'
 import { ValidationMessage } from '@/shared/ui/ValidationMessage'
 
 import type { SourceSelectionResult } from '../types'
 
 const YOUTUBE_PATTERN =
-  /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[\w-]{5,}(?:&\S*)?$/
+  /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|shorts\/)|youtu\.be\/)([\w-]{11})([&?]\S*)?$/i
 
 type SourceSelectionStepProps = {
   initialMode?: 'youtube' | 'file'
@@ -34,7 +33,7 @@ export function SourceSelectionStep({
   const [file, setFile] = useState<File | undefined>()
   const [fileError, setFileError] = useState<string | null>(null)
 
-  const isYoutubeValid = mode === 'youtube' ? YOUTUBE_PATTERN.test(youtubeUrl.trim()) : false
+  const isYoutubeValid = YOUTUBE_PATTERN.test(youtubeUrl.trim())
   const hasPersistedFile = Boolean(previousUploadSummary)
 
   const canProceed = mode === 'youtube' ? isYoutubeValid : Boolean(file) || hasPersistedFile
@@ -55,8 +54,16 @@ export function SourceSelectionStep({
     }
     setFileError(null)
     setFile(nextFile)
+    setMode('file')
     trackEvent('create_upload_start', { name: nextFile.name })
     setTimeout(() => trackEvent('create_upload_done', { name: nextFile.name }), 300)
+  }
+
+  const handleYoutubeChange = (value: string) => {
+    setYoutubeUrl(value)
+    if (value.trim()) {
+      setMode('youtube')
+    }
   }
 
   const handleSubmit = () => {
@@ -69,31 +76,35 @@ export function SourceSelectionStep({
   }
 
   return (
-    <div className="space-y-6">
-      <DialogTitle>1단계 — 제작 소스 연결</DialogTitle>
-      <DialogDescription>
-        YouTube 링크를 불러오거나, 로컬에서 원본 영상을 업로드해 AI 더빙을 생성합니다
-      </DialogDescription>
+    <div className="space-y-2">
+      <div className="mb-6">
+        <DialogTitle>1단계 — 제작 소스 연결</DialogTitle>
+        <DialogDescription>
+          YouTube 링크를 불러오거나, 로컬에서 원본 영상을 업로드해 AI 더빙을 생성합니다
+        </DialogDescription>
+      </div>
 
-      <div className="space-y-1">
-        <Label htmlFor="youtube-url">YouTube 링크</Label>
-        <div className="border-surface-4 bg-surface-1 flex items-center gap-3 rounded-2xl border px-4">
-          <Link2 className="text-muted h-5 w-5" />
-          <Input
-            id="youtube-url"
-            placeholder="https://youtube.com/watch?v=..."
-            value={youtubeUrl}
-            onChange={(event) => setYoutubeUrl(event.target.value)}
-            className="border-none px-0 focus-visible:ring-0"
+      <div className="space-y-4">
+        {/* <Label htmlFor="youtube-url">YouTube 링크</Label> */}
+        <div>
+          <div className="border-surface-4 bg-surface-1 flex items-center gap-3 rounded-2xl border px-4">
+            <Link2 className="text-muted h-5 w-5" />
+            <Input
+              id="youtube-url"
+              placeholder="https://youtube.com/watch?v=..."
+              value={youtubeUrl}
+              onChange={(event) => handleYoutubeChange(event.target.value)}
+              className="border-none px-0 focus-visible:ring-0"
+            />
+          </div>
+          <ValidationMessage
+            message={
+              !isYoutubeValid && youtubeUrl.trim().length > 0
+                ? '올바른 YouTube 링크를 입력하세요.'
+                : undefined
+            }
           />
         </div>
-        <ValidationMessage
-          message={
-            !isYoutubeValid && youtubeUrl.trim().length > 0
-              ? '올바른 YouTube 링크를 입력하세요.'
-              : undefined
-          }
-        />
       </div>
       <div className="text-muted text-center">OR</div>
       <div className="space-y-1">
